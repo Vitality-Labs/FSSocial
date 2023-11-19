@@ -1,0 +1,83 @@
+.login-main-container {
+    width: 100vw;
+    height: 100vh;
+    float: left;
+    overflow: hidden;
+}
+
+.login-main-wrapper {
+    width: 70%;
+    min-height: 200px;
+    margin-top: 150px;
+    margin-left: 15%;
+    /* margin-right: 110px; */
+    background-color: #e2e2e2;
+    border-radius: 20px;
+    border: 2px solid #5289bf;
+}
+
+.fill-height {
+    height: 100%;
+}
+
+.nopadmar {
+    padding: none;
+    margin: none;
+}
+
+.login-forum-container {
+    width: calc(100% - 100px);
+    margin-left: 50px;
+    height: 100%;
+    position: relative;
+    background-color: red;
+}
+
+.row-alt {
+    float: left;
+    width: calc(100% - 40px) !important;
+    height: fit-content;
+    margin-left: 20px;
+    margin-right: 20px;
+    min-height: 2px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.header-text {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.margin-10 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.margin-20 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.margin-30 {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.fit-height {
+    height: fit-content !important;
+}
+
+hr {
+    border-color: lightgray;
+}
+
+.hr-break {
+    height: 1px;
+    width: 50%;
+    border-top: 2px solid rgb(88, 88, 88);
+    background-color: red;
+}
+
+  

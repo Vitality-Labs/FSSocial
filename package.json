@@ -1,0 +1,50 @@
+{
+  "name": "fssocialmedia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "startBk": "grunt",
+    "test": "grunt test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "co-request": "1.0.0",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1",
+    "flatted": "^3.2.7",
+    "forever": "0.15.3",
+    "fs": "^0.0.1-security",
+    "is-word": "^1.0.4",
+    "jsonwebtoken": "7.3.0",
+    "kcors": "2.2.1",
+    "koa": "2.2.0",
+    "koa-bodyparser": "4.1.0",
+    "koa-compress": "^5.1.0",
+    "koa-jwt": "3.0.0",
+    "koa-logger": "2.0.1",
+    "koa-route": "3.2.0",
+    "koa-send": "3.3.0",
+    "lodash": "4.17.4",
+    "mongodb": "2.2.24",
+    "nodemon": "^2.0.20",
+    "util": "^0.12.5",
+    "uuid": "^9.0.0",
+    "ws": "2.2.1"
+  },
+  "devDependencies": {
+    "karma": "1.5.0",
+    "karma-coverage": "1.1.1",
+    "karma-jasmine": "1.1.0",
+    "karma-ng-html2js-preprocessor": "1.0.0",
+    "karma-phantomjs-launcher": "1.0.4",
+    "koa-livereload": "^0.2.0",
+    "mocha": "3.2.0",
+    "phantomjs-prebuilt": "2.1.14",
+    "should": "11.2.1",
+    "supertest": "3.0.0"
+  }
+}

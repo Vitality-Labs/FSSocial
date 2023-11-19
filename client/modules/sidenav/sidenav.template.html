@@ -1,0 +1,81 @@
+<div class="nb_dropshadow_2" style="width: 100%; height: 100%; background-color: rgb(214, 214, 214); overflow-x: hidden; overflow-y: auto;">
+    <div class="sidenav_item bgcolor_transition" ng-click="$root.common.goToRoute('/');" ng-class="{sidenav_item_active: $root.common.menuItem == 'home'}">
+        <div class="sidenav_item_wrapper">
+            <div class="sidenav_icon">
+                <i class="fa fa-compass" aria-hidden="true"></i>
+            </div>
+            <div class="sidenav_text">
+                <span>Timeline</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidenav_item bgcolor_transition" ng-click="$root.common.goToRoute('/explore');" ng-class="{sidenav_item_active: $root.common.menuItem == 'explore'}">
+        <div class="sidenav_item_wrapper">
+            <div class="sidenav_icon">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </div>
+            <div class="sidenav_text">
+                <span>Explore</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidenav_item bgcolor_transition" ng-click="$root.common.goToRoute('/profile/' + $ctrl.user.id);" ng-class="{sidenav_item_active: $root.common.menuItem == 'profile'}">
+        <div class="sidenav_item_wrapper">
+            <div class="sidenav_icon">
+                <i class="fa fa-user" aria-hidden="true"></i>
+            </div>
+            <div class="sidenav_text">
+                <span>Profile</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+<style>
+    .sidenav_item {
+        width: 100%;
+        height: 55px;
+        border-bottom: 1px solid rgb(185, 185, 185);
+        background-color: rgba(185, 185, 185, 0);
+        color: rgb(20, 20, 20);
+        font-size: large;
+        font-weight: 800;
+        cursor: pointer;
+        overflow: hidden;
+    }
+    .sidenav_item_active {
+        background-color: #5289bf !important;
+        color: white !important;
+    }
+    /* .sidenav_item_active .sidenav_text {
+        text-decoration: underline;
+    } */
+    .sidenav_item:hover {
+        background-color: rgba(185, 185, 185, 0.75);
+        text-decoration: underline;
+    }
+    .sidenav_icon {
+        float: left;
+        height: 100%;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .sidenav_text {
+        float: left;
+        height: 100%;
+        width: calc(100% - 40px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .sidenav_item_wrapper {
+        height: 100%;
+        width: calc(100% - 40px);
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+</style>

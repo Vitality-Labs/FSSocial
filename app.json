@@ -1,0 +1,11 @@
+{
+  "name": "FSSocial",
+  "env": {
+    "NODE_ENV": {
+      "value": "production"
+    }
+  },
+  "addons": [
+    "mongolab"
+  ]
+}
