@@ -67,6 +67,9 @@ angular.module('fssocial.common').factory('api', function ($rootScope, $http, $w
     createPost: function(body) {
       return $http({method: 'POST', url: apiBase + '/posts', data: body, headers: headers})
     },
+    uploadPostImage: function(body) {
+      return $http({method: 'POST', url: apiBase + '/uploadPostImage', data: body, headers: headers})
+    },
     get: function(postId) {
       return $http({method: 'GET', url: apiBase + '/post/' + postId, headers: headers})
     },

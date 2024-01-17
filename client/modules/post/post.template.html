@@ -5,10 +5,9 @@
             &nbsp;&nbsp;<span>Back</span>
         </strong>
     </div>
-
     <div class="parent-post-cont" ng-if="$ctrl.post.isReply == true;">
         <div class="parent-post-wrapper">
-            <div class="comment-wrapper" ng-click="$root.common.clickPost($ctrl.parentPost._id, $root.common.getCurrentPath())">
+            <div class="comment-wrapper" ng-click="$root.common.goToRoute($ctrl.returnUrl);">
                 <div class="comment-side">
                     <div class="comment-avatar-wrapper" ng-click="$root.common.clickProfile($ctrl.parentPost.from); $event.stopPropagation();">
                         <div class="comment-avatar">
@@ -60,12 +59,10 @@
     
             </div>
         </div>
-        
         <div class="parent-spacer-wrapper">
             <div class="parent-spacer"></div>
         </div>
     </div>
-
     <div class="post-from-cont" style="position: relative !important;">
         <div class="post-avatar-wrapper" ng-click="$root.common.clickProfile($ctrl.post.from); $event.stopPropagation();">
             <div class="post-avatar">
@@ -83,6 +80,9 @@
     </div>
     <div class="post-text-cont">
         <div class="post-content" id="post-body-{{$ctrl.post._id}}"></div>
+    </div>
+    <div class="post-img-cont" ng-if="$ctrl.post.image">
+        <img src="{{$ctrl.getPostPictureSrc($ctrl.post)}}" style="width: calc(100% - 70px); margin-left: 35px; height: auto; border-radius: 4px;">
     </div>
     <div class="post-controls">
         <div class="post-control-wrapper">
@@ -108,7 +108,6 @@
                 <div class="col-md-2 col-sm-2 col-xs-3 post-ctrl-col post-ctrl-com">
                   <i class="glyphicon glyphicon-share" aria-hidden="true"></i>
                 </div>
-
                 <div class="col-md-4 col-sm-4 hidden-xs post-ctrl-col" style="justify-content: right;">
                     {{$ctrl.timestamp}}
                 </div>
@@ -180,11 +179,16 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
+<input type="file" id="postImageInput" name="postImageInput" accept="image/png, image/jpeg, image/jpg" style="visibility: hidden;"/>
 <style>
+    .post-img-cont {
+        width: 100%;
+        height: fit-content;
+        margin-bottom: 15px;
+    }
     .parent-post-wrapper {
         width: 100%;
         height: fit-content;

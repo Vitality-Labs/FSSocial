@@ -81,6 +81,19 @@ angular
         },
         getCurrentPath: function() {
           return $window.location.href;
+        },
+        getPostPictureSrc: function(post, loadCompressed) {
+          if (!loadCompressed || loadCompressed == false) {
+            var path = "/uploads/posts/" + post.image;
+            return path;
+          } else {
+            if (post.imageCompressed) {
+              var path = "/uploads/posts/" + post.imageCompressed;
+              return path;
+            }
+            var path = "/uploads/posts/" + post.image;
+            return path;
+          }
         }
       };
 

@@ -3,9 +3,27 @@
         <div class="cpc-text-wrapper">
             <textarea class="cpc-textarea" ng-model="$ctrl.newpostText" placeholder="Write a post..." re></textarea>
         </div>
+        <div class="cpc-image-wapper" ng-if="$ctrl.newPostImage != null">
+            <img src="{{$ctrl.getPictureSrc()}}" style="width: calc(100% - 50px); height: auto; border: 1px solid #303030; border-radius: 6px;"/>
+          <span class="cpc-image-cancel" ng-click="$ctrl.removePostImage()">
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </span>
+        </div>
         <div class="cpc-toolbar-wrapper">
+            <div class="cpc-toolbar-item" style="margin-left: 20px !important;" onclick="document.getElementById('postImageInput').click()">
+                <i class="fa fa-picture-o" aria-hidden="true"></i>
+            </div>
+            <div class="cpc-toolbar-item">
+                <i class="fa fa-film" aria-hidden="true"></i>
+            </div>
+            <div class="cpc-toolbar-item">
+                <i class="fa fa-music" aria-hidden="true"></i>
+            </div>
+            <div class="cpc-toolbar-item">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+            </div>
             <button class="btn btn-sm btn-primary pcp-post-btn" ng-disabled="$ctrl.newpostText.length == 0 || $ctrl.newpostText.length > $ctrl.maxPostLength;" ng-click="$ctrl.createNewPost()">
-                Post
+                <strong>Post</strong>
             </button>
             <span class="pcp-post-len" ng-class="{post_len_invalid: $ctrl.newpostText.length > $ctrl.maxPostLength}">
                 {{$ctrl.newpostText.length}} / {{$ctrl.maxPostLength}}
@@ -33,6 +51,9 @@
                     </span>
                 </div>
                 <div class="post-content" id="post-body-{{p._id}}"></div>
+                <div class="post-image-wrapper" ng-if="p.image">
+                    <img src="{{$ctrl.getPostPictureSrc(p)}}" style="width: 100%; height: auto; border-radius: 4px;">
+                </div>
                 <div class="post-controls">
                     <div class="row light-text" style="height: 100%;">
                       <div class="col-md-3 col-sm-3 col-xs-3 post-ctrl-col post-ctrl-com" ng-click="$root.common.clickPostComment(p._id, $root.common.getCurrentPath()); $event.stopPropagation();">
@@ -63,9 +84,51 @@
         </div>
 
     </div>
-
 </div>
+<input type="file" id="postImageInput" name="postImageInput" accept="image/png, image/jpeg, image/jpg" style="visibility: hidden;"/>
 <style>
+    .post-image-wrapper {
+        width: calc(100% - 20px);
+        height: fit-content;
+        /* background-color: red; */
+        margin-top: 16px;
+        margin-bottom: 10px;
+        margin-right: 20px;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+    .cpc-image-cancel {
+        width: 28px;
+        height: 28px;
+        background-color: #5289bf;
+        position: absolute;
+        right: 16px;
+        top: 2px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid #e7e7e7;
+        font-size: 13px;
+        cursor: pointer;
+        color: #eeeeee;
+    }
+
+    .cpc-image-cancel:hover {
+        background-color: #4172a3;
+    }
+    .cpc-image-wapper {
+        width: 100%;
+        height: fit-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        float: left;
+        position: relative;
+        border-bottom: 1px solid rgba(185, 185, 185, 0.35);
+    }
     .pcp-post-len {
         height: 36px !important;
         float: right;
@@ -179,6 +242,8 @@
         min-height: 190px;
         background-color: #e7e7e7;
         border-bottom: 1px solid rgb(185, 185, 185);
+        position: relative;
+        display: inline-block;
     }
 
     .cpc-text-wrapper {
@@ -189,15 +254,28 @@
         float: left;
         border-bottom: 1px solid rgba(185, 185, 185, 0.35);
     }
-
+    .cpc-toolbar-item {
+        height: 30px;
+        width: 30px;
+        float: left;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 10px;
+        cursor: pointer;
+        color: #5289bf;
+        margin-top: 6px;
+        background-color: rgba(76, 76, 76, 0.0);
+    }
+    .cpc-toolbar-item:hover {
+        background-color: rgba(76, 76, 76, 0.15);
+        color: #4172a3;
+    }
     .cpc-toolbar-wrapper {
         width: 100%;
         height: 50px;
-        /* background-color: rgb(226, 226, 226); */
         float: left;
-        /* display: flex; */
-        /* align-items: center; */
-        /* background-color: rgb(210, 210, 210); */
     }
     .pcp-post-btn {
         /* margin-left: auto; */

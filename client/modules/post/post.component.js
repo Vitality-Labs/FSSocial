@@ -199,6 +199,38 @@ angular.module('fssocial.post').component('post', {
         }
       });
     }
+
+    $( document ).ready(function() {
+      $('input[name=postImageInput]').change(function(ev) {
+        var tmp = document.getElementById('postImageInput').files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(tmp);
+        reader.onload = readerEvent => {
+          const b64 = reader.result.substring(reader.result.indexOf(",") + 1);
+          ctrl.uploadImg = b64;
+          api.posts.uploadPostImage({image: ctrl.uploadImg}).then(function(res) {
+            if (res.status == 200 || res.status == 201) {
+              ctrl.newPostImage = res.data.filename;
+              ctrl.newPostImageCompressed = res.data.compressed;
+            }
+          })
+        }
+      });
+    });
+
+    ctrl.getPictureSrc = function() {
+      var path = "/uploads/posts/" + ctrl.newPostImageCompressed;
+      return path;
+    }
+
+    ctrl.getPostPictureSrc = function(post) {
+      return $rootScope.common.getPostPictureSrc(post, true);
+    }
+
+    ctrl.removePostImage = function() {
+      delete ctrl.newPostImage;
+      delete ctrl.newPostImageCompressed;
+    }
     
     postController = ctrl;
   }

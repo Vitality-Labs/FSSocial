@@ -22,7 +22,6 @@ async function getPostData(postObj, userId) {
     var tmpRepostData = await getPostRepostCount(postObj._id.toString(), userId.toString());
     postObj.reposts = tmpRepostData.repostCnt;
     postObj.hasRepost = tmpRepostData.hasRepost;
-    // Get Comments Length TODO
     postObj.comments = await getPostCommentCount(postObj._id.toString());;
     return postObj;
 }
@@ -42,7 +41,6 @@ async function getPost(postId, userId) {
     var tmpRepostData = await getPostRepostCount(postObj._id.toString(), userId.toString());
     postObj.reposts = tmpRepostData.repostCnt;
     postObj.hasRepost = tmpRepostData.hasRepost;
-    // Get Comments Length TODO
     postObj.comments = await getPostCommentCount(postObj._id.toString());
     return postObj;
 }

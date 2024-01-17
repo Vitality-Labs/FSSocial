@@ -12,6 +12,11 @@ var route = require('koa-route'),
     imageSize = require('image-size'),
     mongo = require('../config/mongo');
 
+const { 
+  v1: uuidv1,
+  v4: uuidv4,
+} = require('uuid');
+    
 exports.init = function (app) {
   app.use(route.post('/api/v1/posts', createPost));
   app.use(route.get('/api/v1/post/:id', getPost));
@@ -96,7 +101,7 @@ async function getPost(ctx, id) {
 async function getComments(ctx, id) {
   const user = await cryptography.decryptUserToken(ctx);
   var output = [];
-  var commentIds = await mongo.posts.find({parentId: id.toString()}, {_id: 1}).toArray();
+  var commentIds = await mongo.posts.find({parentId: id.toString()}, {_id: 1}).sort({_id: -1}).toArray();
 
   for (var i = 0; i < commentIds.length; i++) {
     output.push(await postutils.getPost(commentIds[i]._id.toString(), user.id.toString()));
