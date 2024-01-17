@@ -5,9 +5,12 @@
             <textarea class="cpc-textarea" ng-model="$ctrl.newpostText" placeholder="Write a post..." re></textarea>
         </div>
         <div class="cpc-toolbar-wrapper">
-            <button class="btn btn-sm btn-primary pcp-post-btn" ng-disabled="$ctrl.newpostText.length == 0" ng-click="$ctrl.createNewPost()">
+            <button class="btn btn-sm btn-primary pcp-post-btn" ng-disabled="$ctrl.newpostText.length == 0 || $ctrl.newpostText.length > $ctrl.maxPostLength;" ng-click="$ctrl.createNewPost()">
                 Post
             </button>
+            <span class="pcp-post-len" ng-class="{post_len_invalid: $ctrl.newpostText.length > $ctrl.maxPostLength}">
+                {{$ctrl.newpostText.length}} / {{$ctrl.maxPostLength}}
+            </span>
         </div>
     </div>
     <div class="post-list-cont">
@@ -55,7 +58,7 @@
                         <i class="glyphicon glyphicon-share" aria-hidden="true"></i>
                       </div>
                     </div>
-                  </div>
+                </div>
             </div>
 
         </div>
@@ -64,6 +67,19 @@
 
 </div>
 <style>
+    .pcp-post-len {
+        height: 36px !important;
+        float: right;
+        margin-right: 20px;
+        margin-top: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: black;
+    }
+    .post_len_invalid {
+        color: rgb(212, 0, 0);
+    }
     .post-ctrl-com {
         transition: background-color 150ms linear;
     }
@@ -111,6 +127,7 @@
         width: calc(100% - 15px);
         height: fit-content;
         margin-top: 6px;
+        cursor: default;
     }
     .post-main {
         width: calc(100% - 80px);
@@ -171,7 +188,7 @@
         min-height: 140px;
         /* background-color: green; */
         float: left;
-        border-bottom: 1px solid rgb(185, 185, 185);
+        border-bottom: 1px solid rgba(185, 185, 185, 0.35);
     }
 
     .cpc-toolbar-wrapper {
@@ -197,7 +214,7 @@
         min-height: 100px;
         resize: none;
         outline: none;
-        border: none;
+        border: 1px solid #dfdfdf;
         border-radius: 10px;
         /* text-indent: 12px; */
         background-color: #eeeeee;

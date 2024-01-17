@@ -27,6 +27,7 @@ angular
         isCreatingPost: false,
         isLoading: true,
         newPostText: "",
+        maxPostLength: 240,
         createNewPost: function() {
           common.newPostText = "";
           common.isCreatingPost = true;

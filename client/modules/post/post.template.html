@@ -1,6 +1,231 @@
 <div style="width: 100%; height: 100%; overflow-x: hidden; overflow-y: auto;">
+    <div class="return-cont" ng-if="$ctrl.returnUrl && $ctrl.returnUrl.length > 0">
+        <strong class="clickable-text" ng-click="$root.common.goToRoute($ctrl.returnUrl);">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            &nbsp;&nbsp;<span>Back</span>
+        </strong>
+    </div>
+    <div class="post-from-cont">
+        <div class="post-avatar-wrapper" ng-click="$root.common.clickProfile($ctrl.post.from); $event.stopPropagation();">
+            <div class="post-avatar">
+              <img src="{{$root.common.getProfilePicture($ctrl.post.from)}}" height="50" width="50">
+            </div>
+        </div>
+        <div class="post-uname-wrapper">
+            <strong class="clickable-text" ng-click="$root.common.clickProfile($ctrl.post.from); $event.stopPropagation();" style="color: rgb(17, 17, 17);">{{$ctrl.post.fromData.displayname}}</strong>
+            &nbsp;&nbsp;<span class="clickable-text" ng-click="$root.common.clickProfile($ctrl.post.from); $event.stopPropagation();">@{{$ctrl.post.fromData.username}}</span>
+        </div>
+    </div>
+    <div class="post-text-cont">
+        <div class="post-content" id="post-body-{{$ctrl.post._id}}"></div>
+    </div>
+    <div class="post-controls">
+        <div class="post-control-wrapper">
+            <div class="row light-text" style="height: 100%;">
+                <div class="col-md-2 col-sm-2 col-xs-3 post-ctrl-col post-ctrl-com" ng-click="$ctrl.isCommenting = !$ctrl.isCommenting">
+                  <i class="fa fa-comment" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<span>{{$ctrl.post.comments}}</span>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-3 post-ctrl-col post-ctrl-rep" ng-if="$ctrl.user.id != $ctrl.post.from" ng-hide="$ctrl.post.hasRepost" ng-click="$ctrl.repost(p); $event.stopPropagation();">
+                  <i class="fa fa-retweet" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<span>{{$ctrl.post.reposts}}</span>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-3 post-ctrl-col post-ctrl-rep-self" ng-if="$ctrl.user.id == $ctrl.post.from" ng-click="$event.stopPropagation();">
+                  <i class="fa fa-retweet" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<span>{{$ctrl.post.reposts}}</span>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-3 post-ctrl-col post-ctrl-rep" ng-if="$ctrl.user.id != $ctrl.post.from" style="color: #2ccc54;" ng-hide="!$ctrl.post.hasRepost" ng-click="$ctrl.unrepost(p); $event.stopPropagation();">
+                  <i class="fa fa-retweet" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<span>{{$ctrl.post.reposts}}</span>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-3 post-ctrl-col post-ctrl-fav" ng-hide="$ctrl.post.hasLiked" ng-click="$ctrl.likePost(p); $event.stopPropagation();">
+                  <i class="fa fa-heart"></i>&nbsp;&nbsp;&nbsp;<span>{{$ctrl.post.likes}}</span>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-3 post-ctrl-col post-ctrl-fav" style="color: #ff3e3e;" ng-hide="!$ctrl.post.hasLiked" ng-click="$ctrl.unlikePost(p); $event.stopPropagation();">
+                  <i class="fa fa-heart"></i>&nbsp;&nbsp;&nbsp;<span>{{$ctrl.post.likes}}</span>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-3 post-ctrl-col post-ctrl-com">
+                  <i class="glyphicon glyphicon-share" aria-hidden="true"></i>
+                </div>
 
+                <div class="col-md-4 col-sm-4 hidden-xs post-ctrl-col" style="justify-content: right;">
+                    {{$ctrl.timestamp}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-comment-cont" ng-if="$ctrl.isCommenting == true">
+        <div class="comment-input-wrapper">
+            <textarea class="cpc-textarea" ng-model="$ctrl.commentText" placeholder="Write a comment..." re></textarea>
+        </div>
+        <div class="comment-toolbar-wrapper">
+            <button class="btn btn-sm btn-primary pcp-post-btn" ng-disabled="$ctrl.commentText.length == 0 || $ctrl.commentText.length > $ctrl.maxPostLength;" ng-click="$ctrl.createReplyPost()">
+                <strong>Post</strong>
+            </button>
+            <span class="pcp-post-len" ng-class="{post_len_invalid: $ctrl.commentText.length > $ctrl.maxPostLength}">
+                {{$ctrl.commentText.length}} / {{$ctrl.maxPostLength}}
+            </span>
+        </div>
+    </div>
 </div>
 <style>
-    
+    .pcp-post-btn {
+        float: right;
+        margin-right: 20px;
+        margin-top: 4px;
+    }
+    .pcp-post-len {
+        height: 36px !important;
+        float: right;
+        margin-right: 20px;
+        margin-top: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: black;
+    }
+    .post_len_invalid {
+        color: rgb(212, 0, 0);
+    }
+    .comment-toolbar-wrapper {
+        width: 100%;
+        height: 45px;
+        /* float: left; */
+        border-top: 1px solid rgb(185, 185, 185, 0.35);
+        background-color: rgb(228, 228, 228, 0.35);
+    }
+    .cpc-textarea {
+        width: calc(100% - 40px);
+        /* width: 100%; */
+        height: fit-content;
+        /* margin: 0px; */
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        min-height: 100px;
+        resize: none;
+        outline: none;
+        border: 1px solid #dfdfdf;
+        border-radius: 10px;
+        /* text-indent: 12px; */
+        background-color: #eeeeee;
+        font-size: medium;
+        padding: 10px;
+    }
+    .comment-input-wrapper {
+        width: 100%;
+        height: fit-content;
+        /* float: left; */
+    }
+    .post-comment-cont {
+        height: fit-content;
+        width: 100%;
+        border-bottom: 1px solid rgb(185, 185, 185, 0.5);
+    }
+    .return-cont {
+        width: 100%;
+        height: 40px;
+        background-color: rgba(84, 138, 192, 0.75);
+        border-bottom: 1px solid rgb(185, 185, 185, 0.5);
+        padding-left: 10px;
+        padding-right: 10px;
+        font-size: 16px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+    }
+    .post-control-wrapper {
+        width: calc(100% - 40px);
+        margin-left: 20px;
+        margin-right: 20px;
+        height: 100%;
+        /* background-color: blue; */
+    }
+    .post-controls {
+        width: 100%;
+        height: 40px;
+        /* margin-top: 5px; */
+        border-bottom: 1px solid rgb(185, 185, 185);
+        background-color: rgb(228, 228, 228, 0.35);
+    }
+    .post-content {
+        width: calc(100% - 15px);
+        height: fit-content;
+        font-size: 16px;
+        line-height: 24px;
+        cursor: default;
+        /* margin-top: 6px; */
+    }
+    .post-text-cont {
+        width: 100%;
+        height: fit-content;
+        padding-left: 35px;
+        padding-right: 35px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        /* background-color: green; */
+        border-bottom: 1px solid rgb(185, 185, 185, 0.35);
+    }
+    .post-from-cont {
+        width: 100%;
+        height: 65px;
+        background-color: rgb(228, 228, 228);
+        overflow: hidden;
+        border-bottom: 1px solid rgb(185, 185, 185, 0.65);
+    }
+    .post-avatar-wrapper {
+        margin-left: 10px;
+        width: 65px;
+        height: 65px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        float: left;
+    }
+    .post-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    .post-uname-wrapper {
+        height: 65px;
+        float: left;
+        width: fit-content;
+        margin-left: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+    }
+    .post-ctrl-com {
+        transition: background-color 150ms linear;
+    }
+    .post-ctrl-rep {
+        transition: background-color 150ms linear;
+    }
+    .post-ctrl-rep-self {
+        color: #4c4c4c;
+    }
+    .post-ctrl-fav {
+        transition: background-color 150ms linear;
+    }
+    .post-ctrl-com:hover { 
+        color: #319bdd; 
+        font-weight: bold;
+    }
+    .post-ctrl-rep:hover {
+        color: #41d366;
+        font-weight: bold;
+    }
+    .post-ctrl-fav:hover {
+        color: #fa5353;
+        font-weight: bold;
+    }
+    .post-ctrl-col {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        justify-content: center;
+    }
 </style>

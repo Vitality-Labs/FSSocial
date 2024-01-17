@@ -23,7 +23,7 @@ async function getPostData(postObj, userId) {
     postObj.reposts = tmpRepostData.repostCnt;
     postObj.hasRepost = tmpRepostData.hasRepost;
     // Get Comments Length TODO
-    postObj.comments = 0;
+    postObj.comments = await getPostCommentCount(postObj._id.toString());;
     return postObj;
 }
 
@@ -32,6 +32,10 @@ async function getPost(postId, userId) {
     var postObj = await mongo.posts.findOne({_id: mongo.ObjectId(postId.toString())});
     if (!postObj) return null;
     postObj.fromData = await mongo.users.findOne({_id: mongo.ObjectId(postObj.from)}, {_id: 0, username: 1, displayname: 1, verified: 1});
+    // Following Logic
+    // TODO
+    postObj.fromData.following = false;
+    // ----------------
     var tmpLikeData = await getPostLikeCount(postObj._id.toString(), userId.toString());
     postObj.likes = tmpLikeData.likeCnt;
     postObj.hasLiked = tmpLikeData.hasLiked;
@@ -39,7 +43,7 @@ async function getPost(postId, userId) {
     postObj.reposts = tmpRepostData.repostCnt;
     postObj.hasRepost = tmpRepostData.hasRepost;
     // Get Comments Length TODO
-    postObj.comments = 0;
+    postObj.comments = await getPostCommentCount(postObj._id.toString());
     return postObj;
 }
 
@@ -64,4 +68,9 @@ async function getPostRepostCount(id, userId) {
     var hasRepost = false;
     if (tmp) hasRepost = true;
     return {repostCnt: repostsArr.length, hasRepost: hasRepost};
+}
+
+async function getPostCommentCount(id) {
+    var commentArr = await mongo.posts.find({parentId: id.toString()}).toArray();
+    return commentArr.length;
 }

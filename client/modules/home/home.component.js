@@ -14,6 +14,7 @@ angular.module('fssocial.home').component('home', {
       skip: 0,
       limit: 25   
     }
+    ctrl.maxPostLength = $rootScope.common.maxPostLength;
 
     ctrl.loadTimeline = function() {
       api.timelines.getHome(ctrl.timelineQuery).then(function success(res) {
@@ -34,8 +35,8 @@ angular.module('fssocial.home').component('home', {
       }
       api.posts.createPost(obj).then(function success(res) {
         if (res.status == 200) {
-          var newPostId = res.data.id;
-          console.log("newPostId: ", newPostId)
+          // var newPostId = res.data.id;
+          // console.log("newPostId: ", newPostId)x
           ctrl.posts = [];
           ctrl.newpostText = "";
           ctrl.loadTimeline();

@@ -70,6 +70,9 @@ angular.module('fssocial.common').factory('api', function ($rootScope, $http, $w
     get: function(postId) {
       return $http({method: 'GET', url: apiBase + '/post/' + postId, headers: headers})
     },
+    getComments: function(postId) {
+      return $http({method: 'GET', url: apiBase + '/post/comments/' + postId, headers: headers})
+    },
     likePost: function(postId) {
       return $http({method: 'POST', url: apiBase + '/like/' + postId, headers: headers})
     },

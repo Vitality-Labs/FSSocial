@@ -22,7 +22,7 @@ async function getHomeTimeline(ctx) {
     console.log("limit: ", limit)
     console.log("skip: ", skip)
     var userData = {};
-    var posts = await mongo.posts.find({}).sort({_id: -1}).skip(skip).limit(limit).toArray();
+    var posts = await mongo.posts.find({isReply: {$exists: false}}).sort({_id: -1}).skip(skip).limit(limit).toArray();
     
     for (var i = 0; i < posts.length; i++) {
         if (!userData[posts[i].from.toString()]) {

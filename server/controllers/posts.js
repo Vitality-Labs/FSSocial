@@ -12,6 +12,7 @@ var route = require('koa-route'),
 exports.init = function (app) {
     app.use(route.post('/api/v1/posts', createPost));
     app.use(route.get('/api/v1/post/:id', getPost));
+    app.use(route.get('/api/v1/post/comments/:id', getComments));
 };
 
 async function createPost(ctx) {
@@ -86,4 +87,17 @@ async function getPost(ctx, id) {
   console.log("post: ", post)
   ctx.status = 200;
   ctx.body = post;
+}
+
+async function getComments(ctx, id) {
+  const user = await cryptography.decryptUserToken(ctx);
+  var output = [];
+  var commentIds = await mongo.posts.find({parentId: id.toString()}, {_id: 1}).toArray();
+
+  for (var i = 0; i < commentIds.length; i++) {
+    output.push(await postutils.getPost(commentIds[i]._id.toString(), user.id.toString()));
+  }
+
+  ctx.status = 200;
+  ctx.body = output;
 }
