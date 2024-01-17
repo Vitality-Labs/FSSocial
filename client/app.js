@@ -69,10 +69,18 @@ angular
           routeTmp += returnUrl != null ? "?returnUrl=" + returnUrl : "";
           $window.location.replace(routeTmp);
         },
+        clickPostComment: function(postId, returnUrl = null) {
+          var routeTmp = "/post/" + postId;
+          routeTmp += returnUrl != null ? "?isCommenting=true&returnUrl=" + returnUrl : "";
+          $window.location.replace(routeTmp);
+        },
         clickProfile: function(profileId, returnUrl = null) {
           var routeTmp = "/profile/" + profileId;
           routeTmp += returnUrl != null ? "?returnUrl=" + returnUrl : "";
           $window.location.replace(routeTmp);
+        },
+        getCurrentPath: function() {
+          return $window.location.href;
         }
       };
 

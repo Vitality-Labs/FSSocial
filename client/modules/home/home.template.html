@@ -1,5 +1,4 @@
 <div style="width: 100%; height: 100%; overflow-x: hidden; overflow-y: auto;">
-
     <div class="create-post-container">
         <div class="cpc-text-wrapper">
             <textarea class="cpc-textarea" ng-model="$ctrl.newpostText" placeholder="Write a post..." re></textarea>
@@ -36,7 +35,7 @@
                 <div class="post-content" id="post-body-{{p._id}}"></div>
                 <div class="post-controls">
                     <div class="row light-text" style="height: 100%;">
-                      <div class="col-md-3 col-sm-3 col-xs-3 post-ctrl-col post-ctrl-com">
+                      <div class="col-md-3 col-sm-3 col-xs-3 post-ctrl-col post-ctrl-com" ng-click="$root.common.clickPostComment(p._id, $root.common.getCurrentPath()); $event.stopPropagation();">
                         <i class="fa fa-comment" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<span>{{p.comments}}</span>
                       </div>
                       <div class="col-md-3 col-sm-3 col-xs-3 post-ctrl-col post-ctrl-rep" ng-if="$ctrl.user.id != p.from" ng-hide="p.hasRepost" ng-click="$ctrl.repost(p); $event.stopPropagation();">

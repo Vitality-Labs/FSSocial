@@ -11,14 +11,32 @@ angular.module('fssocial.post').component('post', {
       window.location.href = "/login.html"
     }
     ctrl.timestamp = "";
+    ctrl.parentTimestamp = "";
     ctrl.commentText = "";
     ctrl.isCommenting = $routeParams.isCommenting ? true : false;
     ctrl.comments = [];
     ctrl.maxPostLength = $rootScope.common.maxPostLength;
+    ctrl.commentsLoaded = false;
 
     api.posts.get(ctrl.postId).then(function success(res) {
       if (res.status == 200) {
         ctrl.post = res.data;
+
+        if (ctrl.post.isReply == true) {
+          api.posts.get(ctrl.post.parentId).then(function success(res2) {
+            if (res2.status == 200) {
+              ctrl.parentPost = res2.data;
+              console.log("ctrl.parentPost: ", ctrl.parentPost)
+
+              angular.element(document).ready(function () {
+                $rootScope.common.processPostBody(ctrl.parentPost);
+                ctrl.parentTimestamp = ctrl.genPrettyTime(ctrl.parentPost.createdAt);
+                _.defer(function(){$rootScope.$apply();});
+              });
+            }
+          });
+        }
+
         angular.element(document).ready(function () {
           $rootScope.common.processPostBody(ctrl.post);
           ctrl.timestamp = ctrl.genPrettyTime();
@@ -32,9 +50,10 @@ angular.module('fssocial.post').component('post', {
       $rootScope.common.getProfilePicture(ctrl.post.from);
     }
 
-    ctrl.genPrettyTime = function() {
+    ctrl.genPrettyTime = function(ts = null) {
+      if (!ts) ts = ctrl.post.createdAt;
       var output = "";
-      var dateObj = new Date(ctrl.post.createdAt);
+      var dateObj = new Date(ts);
 
       output += (dateObj.getMonth() + 1) + "/";
       output += dateObj.getDate() + "/";
@@ -112,11 +131,71 @@ angular.module('fssocial.post').component('post', {
       api.posts.getComments(ctrl.postId).then(function success(res) {
         if (res.status == 200) {
           ctrl.comments = res.data;
+          ctrl.commentsLoaded = true;
           console.log("ctrl.comments: ", ctrl.comments)
           angular.element(document).ready(function () {
             ctrl.comments.forEach(function(post) { $rootScope.common.processPostBody(post) });
             _.defer(function(){$rootScope.$apply();});
           });
+        }
+      });
+    }
+
+    ctrl.genRelativeTimestamp = function(createdAt) {
+      var now = Date.now();
+      var secDif = (now - createdAt) / 1000;
+
+      if (secDif <= 59) {
+        return Math.round(secDif) + "s";
+      }
+
+      var minDiff = secDif / 60;
+
+      if (minDiff <= 59) {
+        return Math.round(minDiff) + "m";
+      }
+
+      var hrDiff = minDiff / 60;
+      if (hrDiff <= 23) {
+        return Math.round(hrDiff) + "h";
+      }
+
+      var dayDiff = hrDiff / 24;
+      return Math.round(dayDiff) + "d";
+    }
+
+    ctrl.likeComment = function(post) {
+      api.posts.likePost(post._id).then(function(res) {
+        if (res.status == 200 || res.status == 201) {
+          post.likes++;
+          post.hasLiked = true;
+        }
+      });
+    }
+
+    ctrl.unlikeComment = function(post) {
+      api.posts.unlikePost(post._id).then(function(res) {
+        if (res.status == 200 || res.status == 201) {
+          post.likes--;
+          post.hasLiked = false;
+        }
+      });
+    }
+
+    ctrl.repostComment = function(post) {
+      api.posts.repost(post._id).then(function(res) {
+        if (res.status == 200 || res.status == 201) {
+          post.reposts++;
+          post.hasRepost = true;
+        }
+      });
+    }
+
+    ctrl.unrepostComment = function(post) {
+      api.posts.unrepost(post._id).then(function(res) {
+        if (res.status == 200 || res.status == 201) {
+          post.reposts--;
+          post.hasRepost = false;
         }
       });
     }
