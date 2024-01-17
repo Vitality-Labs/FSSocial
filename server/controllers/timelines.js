@@ -4,6 +4,7 @@ var route = require('koa-route'),
     mongo = require('../config/mongo'),
     config = require('../config/config'),
     cryptography = require('../utils/cryptography'),
+    postutils = require('../utils/postutils'),
     jwt = require('jsonwebtoken'),
     _ = require('lodash'),
     ws = require('../config/ws');
@@ -21,7 +22,6 @@ async function getHomeTimeline(ctx) {
     console.log("limit: ", limit)
     console.log("skip: ", skip)
     var userData = {};
-
     var posts = await mongo.posts.find({}).sort({_id: -1}).skip(skip).limit(limit).toArray();
     
     for (var i = 0; i < posts.length; i++) {
@@ -34,22 +34,9 @@ async function getHomeTimeline(ctx) {
         }
 
         posts[i].fromData = userData[posts[i].from.toString()];
-        var tmpLikeData = await getPostLikeCount(posts[i]._id.toString(), user.id.toString());
-        posts[i].likes = tmpLikeData.likeCnt;
-        posts[i].hasLiked = tmpLikeData.hasLiked;
-        posts[i].comments = 0;
-        posts[i].reposts = 0;
+        posts[i] = await postutils.getPostData(posts[i], user.id.toString());
     }
     
     ctx.status = 200;
     ctx.body = posts;
-}
-
-async function getPostLikeCount(id, userId) {
-    var tmp = await mongo.likes.findOne({postId: id}, {users: 1, _id: 0});
-    var tmp2 = await mongo.likes.findOne({postId: id, "users.userId": userId.toString()});
-    var hasLiked = false;
-    if (tmp2) hasLiked = true;
-    if (!tmp) return {hasLiked: false, likeCnt: 0};
-    return {hasLiked: hasLiked, likeCnt: tmp.users.length}
 }

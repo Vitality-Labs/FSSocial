@@ -5,11 +5,13 @@ var route = require('koa-route'),
     util = require('util'),
     cryptography = require('../utils/cryptography'),
     jwt = require('jsonwebtoken'),
+    postutils = require('../utils/postutils'),
     fs = require('fs'),
     mongo = require('../config/mongo');
 
 exports.init = function (app) {
     app.use(route.post('/api/v1/posts', createPost));
+    app.use(route.get('/api/v1/post/:id', getPost));
 };
 
 async function createPost(ctx) {
@@ -74,4 +76,14 @@ async function proccessPostBodyhelper(body, post) {
       if (i < array.length-1) output += " ";
     }
     return output;
+}
+
+async function getPost(ctx, id) {
+  console.log("[getPost] id=" + id);
+  const user = await cryptography.decryptUserToken(ctx);
+  console.log("[getPost] user=", user);
+  var post = await postutils.getPost(id, user.id.toString());
+  console.log("post: ", post)
+  ctx.status = 200;
+  ctx.body = post;
 }

@@ -84,6 +84,24 @@ angular.module('fssocial.home').component('home', {
       });
     }
 
+    ctrl.repost = function(post) {
+      api.posts.repost(post._id).then(function(res) {
+        if (res.status == 200 || res.status == 201) {
+          post.reposts++;
+          post.hasRepost = true;
+        }
+      });
+    }
+
+    ctrl.unrepost = function(post) {
+      api.posts.unrepost(post._id).then(function(res) {
+        if (res.status == 200 || res.status == 201) {
+          post.reposts--;
+          post.hasRepost = false;
+        }
+      });
+    }
+
     ctrl.loadTimeline();
     homeController = ctrl;
   }

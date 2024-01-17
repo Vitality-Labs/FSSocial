@@ -11,10 +11,9 @@
         </div>
     </div>
     <div class="post-list-cont">
-
-        <div class="post-wrapper" ng-repeat="p in $ctrl.posts track by $index">
+        <div class="post-wrapper" ng-click="$root.common.clickPost(p._id, '/')" ng-repeat="p in $ctrl.posts track by $index">
             <div class="post-side">
-                <div class="post-avatar-wrapper">
+                <div class="post-avatar-wrapper" ng-click="$root.common.clickProfile(p.from); $event.stopPropagation();">
                     <div class="post-avatar">
                       <img src="{{$root.common.getProfilePicture(p.from)}}" height="50" width="50">
                     </div>
@@ -23,8 +22,8 @@
             <div class="post-main" style="position: relative; overflow: hidden;">
                 <div class="post-account-info">
                     <span style="float: left; width: fit-content;">
-                        <strong style="color: rgb(17, 17, 17);">{{p.fromData.displayname}}</strong>
-                        &nbsp;<span class="hover-text-uname">@{{p.fromData.username}}</span>&nbsp;&nbsp;•&nbsp;&nbsp;
+                        <strong class="clickable-text" ng-click="$root.common.clickProfile(p.from); $event.stopPropagation();" style="color: rgb(17, 17, 17);">{{p.fromData.displayname}}</strong>
+                        &nbsp;<span class="clickable-text" ng-click="$root.common.clickProfile(p.from); $event.stopPropagation();">@{{p.fromData.username}}</span>&nbsp;&nbsp;•&nbsp;&nbsp;
                         <span>{{$ctrl.genRelativeTimestamp(p.createdAt)}}</span>
                     </span>
                     <span class="post-options-icon">
@@ -93,11 +92,12 @@
         height: 100%;
         display: flex;
         align-items: center;
+        cursor: pointer;
     }
     .post-controls {
         width: 100%;
         height: 40px;
-        margin-top: 0px;
+        margin-top: 5px;
     }
     .post-account-info {
         width: 100%;
@@ -110,7 +110,7 @@
     .post-content {
         width: calc(100% - 15px);
         height: fit-content;
-        margin-top: 10px;
+        margin-top: 6px;
     }
     .post-main {
         width: calc(100% - 80px);
@@ -122,6 +122,7 @@
         height: 50px;
         border-radius: 50%;
         overflow: hidden;
+        cursor: pointer;
     }
     .post-avatar-wrapper {
         width: 100%;
@@ -146,6 +147,10 @@
         /* background-color: blue; */
         overflow: hidden;
         border-bottom: 1px solid rgb(185, 185, 185);
+        background-color: rgba(0, 0, 0, 0);
+    }
+    .post-wrapper:hover {
+        background-color: rgba(99, 99, 99, 0.025);
     }
     .post-list-cont {
         width: 100%;
@@ -212,6 +217,7 @@
         color: rgba(58, 58, 58, 0.85);
         border-radius: 50%;
         transition: background-color 150ms linear;
+        cursor: pointer;
     }
     .post-options-icon:hover {
         background-color: rgba(44, 44, 44, 0.085);

@@ -67,11 +67,20 @@ angular.module('fssocial.common').factory('api', function ($rootScope, $http, $w
     createPost: function(body) {
       return $http({method: 'POST', url: apiBase + '/posts', data: body, headers: headers})
     },
+    get: function(postId) {
+      return $http({method: 'GET', url: apiBase + '/post/' + postId, headers: headers})
+    },
     likePost: function(postId) {
       return $http({method: 'POST', url: apiBase + '/like/' + postId, headers: headers})
     },
     unlikePost: function(postId) {
       return $http({method: 'POST', url: apiBase + '/unlike/' + postId, headers: headers})
+    },
+    repost: function(postId) {
+      return $http({method: 'POST', url: apiBase + '/repost/' + postId, headers: headers})
+    },
+    unrepost: function(postId) {
+      return $http({method: 'POST', url: apiBase + '/unrepost/' + postId, headers: headers})
     }
   }
 
