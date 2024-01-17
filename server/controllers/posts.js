@@ -7,34 +7,38 @@ var route = require('koa-route'),
     jwt = require('jsonwebtoken'),
     postutils = require('../utils/postutils'),
     fs = require('fs'),
+    jimp = require('jimp'),
+    jpeg = require('jpeg-js'),
+    imageSize = require('image-size'),
     mongo = require('../config/mongo');
 
 exports.init = function (app) {
-    app.use(route.post('/api/v1/posts', createPost));
-    app.use(route.get('/api/v1/post/:id', getPost));
-    app.use(route.get('/api/v1/post/comments/:id', getComments));
+  app.use(route.post('/api/v1/posts', createPost));
+  app.use(route.get('/api/v1/post/:id', getPost));
+  app.use(route.get('/api/v1/post/comments/:id', getComments));
+  app.use(route.post('/api/v1/uploadPostImage', uploadPostImage))
 };
 
 async function createPost(ctx) {
-    var post = ctx.request.body;
-    const user = await cryptography.decryptUserToken(ctx);
-    if (user.id.toString() != post.from.toString()) {
-        ctx.status = 401;
-        ctx.body = "You are not authorized to post to that user's account!";
-        return;
-    }
+  var post = ctx.request.body;
+  const user = await cryptography.decryptUserToken(ctx);
+  if (user.id.toString() != post.from.toString()) {
+      ctx.status = 401;
+      ctx.body = "You are not authorized to post to that user's account!";
+      return;
+  }
 
-    if ((!post.from || post.from == "") || (!post.body || post.body == "")) {
-        ctx.status = 400;
-        ctx.body = "Missing required field. [Required: 'from', and 'body']";
-        return;
-    }
+  if ((!post.from || post.from == "") || (!post.body || post.body == "")) {
+      ctx.status = 400;
+      ctx.body = "Missing required field. [Required: 'from', and 'body']";
+      return;
+  }
 
-    post.body = await proccessPostBodyhelper(post.body, post);
-    post.createdAt = Date.now();
-    var results = await mongo.posts.insertOne(post);
-    ctx.status = 200;
-    ctx.body = {id: results.ops[0]._id};
+  post.body = await proccessPostBodyhelper(post.body, post);
+  post.createdAt = Date.now();
+  var results = await mongo.posts.insertOne(post);
+  ctx.status = 200;
+  ctx.body = {id: results.ops[0]._id};
 }
 
 async function proccessPostBodyhelper(body, post) {
@@ -100,4 +104,62 @@ async function getComments(ctx, id) {
 
   ctx.status = 200;
   ctx.body = output;
+}
+
+async function uploadPostImage(ctx) {
+  const user = await cryptography.decryptUserToken(ctx);
+  if (!user) {
+      ctx.status = 404;
+      ctx.body = "Unauthorized!";
+      return;
+  }
+
+  const body = ctx.request.body;
+  const buffer = Buffer.from(body.image, 'base64');
+  var vals = {
+    jpg: 'ffd8ffe0',
+    png: '89504e47',
+    jpg2: 'ffd8ffe1',
+    jpg3: 'ffd8ffdb',
+    jpg4: 'ffd8ffee',
+    png2: '89504e47'
+  };
+  if (!buffer.includes(vals.jpg, 0, "hex")
+      && !buffer.includes(vals.jpg2, 0, "hex")
+      && !buffer.includes(vals.jpg3, 0, "hex")
+      && !buffer.includes(vals.jpg4, 0, "hex")
+      && !buffer.includes(vals.png, 0, "hex")
+      && !buffer.includes(vals.png2, 0, "hex")) {
+    ctx.body = "Not an image";
+    ctx.status = 409;
+    return;
+  }
+
+  try {
+    const compressedImageBuffer = await resizeAndCompressImage(buffer, 800, 75);
+    const filename = uuidv4();
+    const compressedFilePath = 'client/uploads/posts/' + filename + '_compressed.jpg';
+    await util.promisify(fs.writeFile)(compressedFilePath, compressedImageBuffer);
+    const originalFilePath = 'client/uploads/posts/' + filename + '.jpg';
+    await util.promisify(fs.writeFile)(originalFilePath, buffer);
+    ctx.status = 200;
+    ctx.body = {
+      filename: filename + '.jpg',
+      compressed: filename + '_compressed.jpg'
+    }
+  } catch (err) {
+    console.error('Error processing image:', err);
+    ctx.status = 500;
+    ctx.body = 'Internal Server Error';
+  }
+}
+
+async function resizeAndCompressImage(buffer, maxWidth, quality) {
+  const dimensions = imageSize(buffer);
+  const aspectRatio = dimensions.width / dimensions.height;
+  const newHeight = Math.floor(maxWidth / aspectRatio);
+  const image = await jimp.read(buffer);
+  await image.resize(maxWidth, newHeight);
+  const compressedBuffer = await image.getBufferAsync(jimp.MIME_JPEG);
+  return compressedBuffer;
 }
