@@ -7,7 +7,7 @@
     </div>
     <div class="parent-post-cont" ng-if="$ctrl.post.isReply == true;">
         <div class="parent-post-wrapper">
-            <div class="comment-wrapper" ng-click="$root.common.goToRoute($ctrl.returnUrl);">
+            <div class="comment-wrapper" ng-click="$ctrl.clickParentPost()">
                 <div class="comment-side">
                     <div class="comment-avatar-wrapper" ng-click="$root.common.clickProfile($ctrl.parentPost.from); $event.stopPropagation();">
                         <div class="comment-avatar">

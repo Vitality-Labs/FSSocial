@@ -140,6 +140,10 @@ angular.module('fssocial.home').component('home', {
       delete ctrl.newPostImageCompressed;
     }
 
+    ctrl.clickProfile = function() {
+      $rootScope.common.getProfilePicture(ctrl.post.from);
+    }
+
     ctrl.loadTimeline();
     homeController = ctrl;
   }

@@ -231,6 +231,22 @@ angular.module('fssocial.post').component('post', {
       delete ctrl.newPostImage;
       delete ctrl.newPostImageCompressed;
     }
+
+    ctrl.clickParentPost = function() {
+      console.log("ctrl.returnUrl: ", ctrl.returnUrl)
+      var host = $rootScope.common.getServerHost();
+      var path = "/post/" + ctrl.parentPost._id.toString();
+      console.log("host: ", host)
+      console.log("path: ", path)
+      // if ($ctrl.returnUrl == "")
+      if (ctrl.returnUrl.indexOf((host + path)) == 0) {
+        console.log("Return URL == parent");
+        $rootScope.common.goToRoute(ctrl.returnUrl);
+      } else {
+        console.log("Return URL != parent");
+        $rootScope.common.goToRoute(path + "?returnUrl=" + $rootScope.common.getCurrentPath());
+      }
+    }
     
     postController = ctrl;
   }

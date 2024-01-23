@@ -3,6 +3,7 @@
 var route = require('koa-route'),
     config = require('../config/config'),
     util = require('util'),
+    cryptography = require('../utils/cryptography'),
     jwt = require('jsonwebtoken'),
     fs = require('fs'),
     mongo = require('../config/mongo');
@@ -11,6 +12,7 @@ exports.init = function (app) {
   app.use(route.get('/api/v1/users/:id', getUser));
   app.use(route.get('/api/v1/users/byUsername/:username', getUserByUsername));
   app.use(route.post('/api/v1/users/updateProfilePicture/', updateProfilePicture));
+  app.use(route.get('/api/v1/users/getProfileData/:id', getUserProfile));
 };
 
 async function getUser(ctx, id) {
@@ -77,4 +79,38 @@ async function updateProfilePicture(ctx) {
     ctx.status = 500;
     ctx.body = 'Internal Server Error';
   }
+}
+
+async function getUserProfile(ctx, id) {
+  const requser = await cryptography.decryptUserToken(ctx);
+  var user = await mongo.users.findOne({_id: mongo.ObjectId(id)}, 
+    {_id: 1, username: 1, displayname: 1, description: 1, 
+      birthday: 1, verified: 1, location: 1, suspended: 1});
+  
+  if (user == undefined) {
+    ctx.status = 500;
+    ctx.body = "User not found!"
+    return;
+  }
+
+  var postCount = await mongo.posts.find({from: id.toString()}).count();
+  var repostCount = await mongo.reposts.find({from: id.toString()}).count();
+  var likedCount = await mongo.likes.find({'users.userId': id.toString()}).count();
+  user.stats = {
+    postCount: postCount ? postCount : 0,
+    repostCount: repostCount ? repostCount : 0,
+    likedCount: likedCount ? likedCount : 0,
+    followers: 0,
+    following: 0
+  }
+
+  if (requser.id == user._id.toString()) {
+    user.ownAccount = true;;
+  } else {
+    user.isFollowing = false;
+    user.isFollowingMe = false;
+  }
+
+  ctx.status = 200;
+  ctx.body = user;
 }

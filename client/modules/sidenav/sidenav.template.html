@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <div class="sidenav_item bgcolor_transition" ng-click="$root.common.goToRoute('/profile/' + $ctrl.user.id);" ng-class="{sidenav_item_active: $root.common.menuItem == 'profile'}">
+    <div class="sidenav_item bgcolor_transition" ng-click="$root.common.goToRoute('/profile/' + $ctrl.user.id);" ng-class="{sidenav_item_active: ($root.common.menuItem == 'profile' && $root.common.getCurrentPath().includes($ctrl.user.id))}">
         <div class="sidenav_item_wrapper">
             <div class="sidenav_icon">
                 <i class="fa fa-user" aria-hidden="true"></i>
@@ -46,7 +46,8 @@
         overflow: hidden;
     }
     .sidenav_item_active {
-        background-color: #5289bf !important;
+        /* background-color: #5289bf !important; */
+        background-color: #5791ca !important;
         color: white !important;
     }
     /* .sidenav_item_active .sidenav_text {

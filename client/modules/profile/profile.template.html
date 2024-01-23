@@ -1,37 +1,44 @@
-<div style="width: 100%; height: 100%; overflow-x: hidden; overflow-y: auto;">
-    <div class="create-post-container">
-        <div class="cpc-text-wrapper">
-            <textarea class="cpc-textarea" ng-model="$ctrl.newpostText" placeholder="Write a post..." re></textarea>
+<div class="profile-container">
+    <div class="profile-wrapper">
+        <div class="profile-banner-wrapper"></div>
+        <div class="profile-avatar-container">
+            <div class="profile-avatar-wrapper">
+                <img src="{{$root.common.getProfilePicture($ctrl.profileData._id)}}" height="90" width="90">
+            </div>
         </div>
-        <div class="cpc-image-wapper" ng-if="$ctrl.newPostImage != null">
-            <img src="{{$ctrl.getPictureSrc()}}" style="width: calc(100% - 50px); height: auto; border: 1px solid #303030; border-radius: 6px;"/>
-          <span class="cpc-image-cancel" ng-click="$ctrl.removePostImage()">
-            <i class="fa fa-times" aria-hidden="true"></i>
-          </span>
+        <div class="profile-details-container">
+            <div class="profile-details-wrapper">
+                <div class="profile-name-container">
+                    <span><strong>{{$ctrl.profileData.displayname}}</strong></span>
+                    <span ng-if="$ctrl.profileData.verified" style="color: #5289bf;">&nbsp;&nbsp;<i class="fa fa-check-circle" aria-hidden="true"></i></span>
+                </div>
+                <div class="profile-account-container">
+                    <span>@{{$ctrl.profileData.username}}</span>
+                    <div class="followsMe" ng-if="$ctrl.profileData.isFollowingMe">Follows You</div>
+                </div>
+                <div class="profile-actions-conainer">
+                    <button class="btn btn-sm btn-primary" ng-disabled="0 == 0" ng-if="$ctrl.profileData.ownAccount == true"><strong>Edit Account</strong></button>
+                    <button class="btn btn-sm btn-primary" ng-disabled="0 == 0" ng-if="!$ctrl.profileData.ownAccount"><strong>Follow</strong></button>
+                </div>
+            </div>
         </div>
-        <div class="cpc-toolbar-wrapper">
-            <div class="cpc-toolbar-item" style="margin-left: 20px !important;" onclick="document.getElementById('postImageInput').click()">
-                <i class="fa fa-picture-o" aria-hidden="true"></i>
-            </div>
-            <div class="cpc-toolbar-item">
-                <i class="fa fa-film" aria-hidden="true"></i>
-            </div>
-            <div class="cpc-toolbar-item">
-                <i class="fa fa-music" aria-hidden="true"></i>
-            </div>
-            <div class="cpc-toolbar-item">
-                <i class="fa fa-map-marker" aria-hidden="true"></i>
-            </div>
-            <button class="btn btn-sm btn-primary pcp-post-btn" ng-disabled="$ctrl.newpostText.length == 0 || $ctrl.newpostText.length > $ctrl.maxPostLength;" ng-click="$ctrl.createNewPost()">
-                <strong>Post</strong>
-            </button>
-            <span class="pcp-post-len" ng-class="{post_len_invalid: $ctrl.newpostText.length > $ctrl.maxPostLength}">
-                {{$ctrl.newpostText.length}} / {{$ctrl.maxPostLength}}
-            </span>
+        <div class="profile-description-container">
+            <span ng-if="$ctrl.profileData.description && !($ctrl.profileData.suspended == true)">{{$ctrl.profileData.description}}</span>
         </div>
-    </div>
-    <div class="post-list-cont">
-        <div class="post-wrapper" ng-click="$root.common.clickPost(p._id, '/')" ng-repeat="p in $ctrl.posts track by $index">
+        <div class="profile-stats-container">
+            <div class="stat-contianer" style="border-right: 2px solid #dadada;">
+                <span class="clickable-text">{{$ctrl.profileData.stats.followers}} Follower<span ng-if="$ctrl.profileData.stats.followers > 1 || $ctrl.profileData.stats.followers == 0">s</span></span>
+            </div>
+            <div class="stat-contianer">
+                <span class="clickable-text">{{$ctrl.profileData.stats.following}} Following</span>
+            </div>
+        </div>
+
+    
+        <div class="post-wrapper" ng-click="$root.common.clickPost(p._id, $root.common.getCurrentPath())" ng-class="{post_reply_padding: p.isReply == true}" ng-repeat="p in $ctrl.posts track by $index">
+            <div class="post-reply-banner" ng-if="p.isReply == true">
+                <strong style="font-size: 10px; color: white;"><i class="fa fa-reply" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Reply to @{{p.parentFromData.username}}</strong>
+            </div>
             <div class="post-side">
                 <div class="post-avatar-wrapper" ng-click="$root.common.clickProfile(p.from); $event.stopPropagation();">
                     <div class="post-avatar">
@@ -83,65 +90,152 @@
 
         </div>
 
+
+
+
+
+
+
+
+
+
     </div>
 </div>
-<input type="file" id="postImageInput" name="postImageInput" accept="image/png, image/jpeg, image/jpg" style="visibility: hidden;"/>
 <style>
-    .post-image-wrapper {
-        width: calc(100% - 20px);
-        height: fit-content;
-        /* background-color: red; */
-        margin-top: 16px;
-        margin-bottom: 10px;
-        margin-right: 20px;
-        border-radius: 6px;
-        overflow: hidden;
-    }
-    .cpc-image-cancel {
-        width: 28px;
-        height: 28px;
-        background-color: #5289bf;
+    .post-reply-banner {
+        width: 100%;
+        height: 15px;
         position: absolute;
-        right: 16px;
-        top: 2px;
-        border-radius: 50%;
+        top: 0px;
+        left: 0px;
+        background-color: rgba(82, 136, 191, 0.75);
+        display: flex;
+        align-items: center;
+        padding-left: 35px;
+        padding-right: 35px;
+        padding-top: 2px;
+    }
+    .stat-contianer {
+        float: left;
+        height: 100%;
+        width: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 3px solid #e7e7e7;
-        font-size: 13px;
-        cursor: pointer;
-        color: #eeeeee;
+    }
+    .profile-stats-container {
+        width: 100%;
+        height: 35px;
+        background-color: #e4e4e4;
+        border-bottom: 2px solid #c4c4c4;
+        border-top: 1px solid #dddddd;
+        float: left;
+        margin-top: 10px;
+    }
+    .profile-actions-conainer {
+        width: fit-content;
+        height: 100%;
+        float: right;
+        display: flex;
+        align-items: center;
+        margin-right: 25px;
+    }
+    .profile-container {
+        width: 100%; 
+        height: 100%; 
+        padding: none; 
+        margin: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+        z-index: 1;
+    }
+    .profile-description-container {
+        /* width: 100%; */
+        width: calc(100% - 80px);
+        margin-left: 40px;
+        margin-right: 40px;
+        height: fit-content;
+        margin-top: 65px;
+        position: relative;
+        margin-bottom: 10px;
+        float: left;
     }
 
-    .cpc-image-cancel:hover {
-        background-color: #4172a3;
-    }
-    .cpc-image-wapper {
+    .profile-banner-wrapper {
         width: 100%;
-        height: fit-content;
+        height: 180px;
+        background-color: #4b81b8;
+        border-radius: 0px 0px 10px 10px;
+        float: left;
+    }
+
+    .profile-avatar-container {
+        position: absolute;
+        left: 25px;
+        top: 130px;
+        height: 100px;
+        width: 100px;
+        background-color: #ececec;
+        border-radius: 50%;
+    }
+
+    .profile-avatar-wrapper {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        margin: 5px;
+        overflow: hidden;
+    }
+
+    .profile-name-container {
+        width: fit-content;
+        height: 24px;
+        position: absolute;
+        top: 5px;
+        bottom: 0px;
         display: flex;
         align-items: center;
-        justify-content: center;
-        padding-top: 20px;
-        padding-bottom: 20px;
+        font-size: large;
+        font-weight: bold;
+    }
+
+    .profile-details-wrapper {
+        width: 100%;
+        height: 100%;
         float: left;
         position: relative;
-        border-bottom: 1px solid rgba(185, 185, 185, 0.35);
     }
-    .pcp-post-len {
-        height: 36px !important;
-        float: right;
-        margin-right: 20px;
-        margin-top: 4px;
+
+    .profile-details-container {
+        width: calc(100% - 140px);
+        height: 54px;
+        position: absolute;
+        top: 182px;
+        right: 0px;
+    }
+
+    .profile-account-container {
+        width: fit-content;
+        height: 15px;
+        position: absolute;
+        left: 0px;
+        bottom: 12px;
         display: flex;
-        justify-content: center;
         align-items: center;
-        color: black;
+        font-size: small;
     }
-    .post_len_invalid {
-        color: rgb(212, 0, 0);
+
+    .profile-wrapper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
+
+
+    /* -------------------- */
+
     .post-ctrl-com {
         transition: background-color 150ms linear;
     }
@@ -227,79 +321,10 @@
         overflow: hidden;
         border-bottom: 1px solid rgb(185, 185, 185);
         background-color: rgba(0, 0, 0, 0);
+        position: relative;
     }
     .post-wrapper:hover {
         background-color: rgba(99, 99, 99, 0.025);
-    }
-    .post-list-cont {
-        width: 100%;
-        height: fit-content;
-        min-height: 50px;
-    }
-    .create-post-container {
-        width: 100%;
-        height: fit-content;
-        min-height: 190px;
-        background-color: #e7e7e7;
-        border-bottom: 1px solid rgb(185, 185, 185);
-        position: relative;
-        display: inline-block;
-    }
-
-    .cpc-text-wrapper {
-        width: 100%;
-        height: fit-content;
-        min-height: 140px;
-        /* background-color: green; */
-        float: left;
-        border-bottom: 1px solid rgba(185, 185, 185, 0.35);
-    }
-    .cpc-toolbar-item {
-        height: 30px;
-        width: 30px;
-        float: left;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        margin: 10px;
-        cursor: pointer;
-        color: #5289bf;
-        margin-top: 6px;
-        background-color: rgba(76, 76, 76, 0.0);
-    }
-    .cpc-toolbar-item:hover {
-        background-color: rgba(76, 76, 76, 0.15);
-        color: #4172a3;
-    }
-    .cpc-toolbar-wrapper {
-        width: 100%;
-        height: 50px;
-        float: left;
-    }
-    .pcp-post-btn {
-        /* margin-left: auto; */
-        /* order: 2; */
-        float: right;
-        margin-right: 20px;
-        margin-top: 4px;
-    }
-    .cpc-textarea {
-        width: calc(100% - 40px);
-        height: fit-content;
-        margin: 20px;
-        min-height: 100px;
-        resize: none;
-        outline: none;
-        border: 1px solid #d3d3d3;
-        border-radius: 10px;
-        /* text-indent: 12px; */
-        background-color: #e2e2e2; /* #eeeeee */
-        font-size: medium;
-        padding: 10px;
-    }
-    .cpc-textarea:focus {
-        background-color: #e9e9e9;
     }
     .post-options-icon {
         right: 20px; 
@@ -311,12 +336,19 @@
         justify-content: center;
         position: absolute; 
         font-size: large; 
-        color: rgba(58, 58, 58, 0.85);
+        color: rgba(154, 154, 154, 0.85);
         border-radius: 50%;
         transition: background-color 150ms linear;
-        cursor: pointer;
     }
     .post-options-icon:hover {
-        background-color: rgba(44, 44, 44, 0.085);
+        background-color: rgba(255, 255, 255, 0.085);
+    }
+    .post-content {
+        width: calc(100% - 15px);
+        height: fit-content;
+        margin-top: 0px;
+    }
+    .post_reply_padding {
+        padding-top: 15px;
     }
 </style>

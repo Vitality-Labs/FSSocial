@@ -370,3 +370,18 @@ a:hover {
   height: calc(100% - 55px);
   overflow: hidden;
 }
+
+.followsMe {
+  background-color:#c0c0c0;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 2px;
+  padding-bottom: 1px;
+  margin-left: 15px;
+  border-radius: 5px;
+  cursor: default;
+  font-size: x-small;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

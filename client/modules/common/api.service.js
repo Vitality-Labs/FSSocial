@@ -90,9 +90,29 @@ angular.module('fssocial.common').factory('api', function ($rootScope, $http, $w
     }
   }
 
+  api.users = {
+    getProfileData: function(userId) {
+      return $http({method: 'GET', url: apiBase + '/users/getProfileData/' + userId, headers: headers})
+    },
+  }
+
   api.timelines = {
     getHome: function(params) {
       var reqUrl = "/timeline/home";
+      var querStr = "?"
+      if (params) {
+        var keys = Object.keys(params);
+
+        for(var i = 0; i < keys.length; i++) {
+          querStr += keys[i] + "=" + params[keys[i]];
+          if (i < keys.length-1) querStr += "&";
+        }
+        reqUrl += querStr;
+      }
+      return $http({method: 'GET', url: apiBase + reqUrl, headers: headers});
+    },
+    getProfile: function(userId, params) {
+      var reqUrl = "/timeline/profile/" + userId;
       var querStr = "?"
       if (params) {
         var keys = Object.keys(params);

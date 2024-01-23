@@ -8,6 +8,7 @@ angular
       'fssocial.sidenav',
       'fssocial.topnav',
       'fssocial.post',
+      'fssocial.profile',
       'fssocial.home'
     ])
 
@@ -81,6 +82,9 @@ angular
         },
         getCurrentPath: function() {
           return $window.location.href;
+        },
+        getServerHost: function() {
+          return ($window.location.protocol + "//" + $window.location.host);
         },
         getPostPictureSrc: function(post, loadCompressed) {
           if (!loadCompressed || loadCompressed == false) {
