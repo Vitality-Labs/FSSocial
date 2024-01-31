@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <div class="sidenav_item bgcolor_transition" ng-click="$root.common.goToRoute('/explore');" ng-class="{sidenav_item_active: $root.common.menuItem == 'explore'}">
+    <!-- <div class="sidenav_item bgcolor_transition" ng-click="$root.common.goToRoute('/explore');" ng-class="{sidenav_item_active: $root.common.menuItem == 'explore'}">
         <div class="sidenav_item_wrapper">
             <div class="sidenav_icon">
                 <i class="fa fa-search" aria-hidden="true"></i>
@@ -19,7 +19,7 @@
                 <span>Explore</span>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div class="sidenav_item bgcolor_transition" ng-click="$root.common.goToRoute('/profile/' + $ctrl.user.id);" ng-class="{sidenav_item_active: ($root.common.menuItem == 'profile' && $root.common.getCurrentPath().includes($ctrl.user.id))}">
         <div class="sidenav_item_wrapper">

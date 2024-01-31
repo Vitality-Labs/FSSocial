@@ -19,8 +19,6 @@ angular.module('fssocial.home').component('home', {
     ctrl.loadTimeline = function() {
       api.timelines.getHome(ctrl.timelineQuery).then(function success(res) {
         ctrl.posts = res.data;
-        console.log("ctrl.posts: ", ctrl.posts)
-
         angular.element(document).ready(function () {
           ctrl.posts.forEach(function(post) { $rootScope.common.processPostBody(post) });
           _.defer(function(){$rootScope.$apply();});
@@ -39,8 +37,6 @@ angular.module('fssocial.home').component('home', {
       }
       api.posts.createPost(obj).then(function success(res) {
         if (res.status == 200) {
-          // var newPostId = res.data.id;
-          // console.log("newPostId: ", newPostId)x
           ctrl.posts = [];
           ctrl.newpostText = "";
           ctrl.loadTimeline();

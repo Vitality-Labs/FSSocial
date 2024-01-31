@@ -62,7 +62,7 @@ async function getProfileTimeline(ctx, userId) {
             }
 
             if (fromData.verified == true) {
-                userData[posts[i].parentFrom.toString()].verified == fromData.verified;
+                userData[posts[i].from.toString()].verified == fromData.verified;
             }
         }
 

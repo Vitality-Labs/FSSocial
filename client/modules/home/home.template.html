@@ -13,15 +13,15 @@
             <div class="cpc-toolbar-item" style="margin-left: 20px !important;" onclick="document.getElementById('postImageInput').click()">
                 <i class="fa fa-picture-o" aria-hidden="true"></i>
             </div>
-            <div class="cpc-toolbar-item">
+            <div class="cpc-toolbar-item" onclick="document.getElementById('postImageInput').click()">
                 <i class="fa fa-film" aria-hidden="true"></i>
             </div>
-            <div class="cpc-toolbar-item">
+            <!-- <div class="cpc-toolbar-item">
                 <i class="fa fa-music" aria-hidden="true"></i>
             </div>
             <div class="cpc-toolbar-item">
                 <i class="fa fa-map-marker" aria-hidden="true"></i>
-            </div>
+            </div> -->
             <button class="btn btn-sm btn-primary pcp-post-btn" ng-disabled="$ctrl.newpostText.length == 0 || $ctrl.newpostText.length > $ctrl.maxPostLength;" ng-click="$ctrl.createNewPost()">
                 <strong>Post</strong>
             </button>

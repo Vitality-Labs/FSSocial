@@ -17,8 +17,6 @@ exports.init = function (app) {
 async function repost(ctx, id) {
     const user = jwt.verify(ctx.request.accept.headers.authorization.toString().replace("Bearer ", ""), config.app.secret);
     var userId = user.id.toString();
-    console.log("ctx.body: ", ctx.request.body)
-    
     if (!id) {
         ctx.status = 500;
         ctx.body = "No postId provided!";
@@ -56,7 +54,6 @@ async function repost(ctx, id) {
         postId: post._id.toString(),
         createdAt: Date.now()
     }
-
     await mongo.reposts.insertOne(repostDoc);
     ctx.status = 201;
     ctx.body = "Ok";

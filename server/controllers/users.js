@@ -105,7 +105,7 @@ async function getUserProfile(ctx, id) {
   }
 
   if (requser.id == user._id.toString()) {
-    user.ownAccount = true;;
+    user.ownAccount = true;
   } else {
     user.isFollowing = false;
     user.isFollowingMe = false;
