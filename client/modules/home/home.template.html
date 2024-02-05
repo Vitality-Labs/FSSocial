@@ -16,12 +16,6 @@
             <div class="cpc-toolbar-item" onclick="document.getElementById('postImageInput').click()">
                 <i class="fa fa-film" aria-hidden="true"></i>
             </div>
-            <!-- <div class="cpc-toolbar-item">
-                <i class="fa fa-music" aria-hidden="true"></i>
-            </div>
-            <div class="cpc-toolbar-item">
-                <i class="fa fa-map-marker" aria-hidden="true"></i>
-            </div> -->
             <button class="btn btn-sm btn-primary pcp-post-btn" ng-disabled="$ctrl.newpostText.length == 0 || $ctrl.newpostText.length > $ctrl.maxPostLength;" ng-click="$ctrl.createNewPost()">
                 <strong>Post</strong>
             </button>
@@ -90,7 +84,6 @@
     .post-image-wrapper {
         width: calc(100% - 20px);
         height: fit-content;
-        /* background-color: red; */
         margin-top: 16px;
         margin-bottom: 10px;
         margin-right: 20px;

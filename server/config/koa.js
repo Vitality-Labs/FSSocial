@@ -10,18 +10,30 @@ var fs = require('fs'),
     config = require('./config');
 
 module.exports = function (app) {
+    // app.use(compress({
+    //     filter (content_type) {
+    //         return /text/i.test(content_type)
+    //     },
+    //     threshold: 128,
+    //     gzip: {
+    //         flush: require('zlib').constants.Z_SYNC_FLUSH
+    //     },
+    //     deflate: {
+    //         flush: require('zlib').constants.Z_SYNC_FLUSH,
+    //     },
+    //     br: false
+    // }));
     app.use(compress({
-        filter (content_type) {
-            return /text/i.test(content_type)
-        },
-        threshold: 128,
+        threshold: 1024, //128,
         gzip: {
-            flush: require('zlib').constants.Z_SYNC_FLUSH
+          flush: require('zlib').constants.Z_SYNC_FLUSH,
+          level: 9,
         },
         deflate: {
-            flush: require('zlib').constants.Z_SYNC_FLUSH,
+          flush: require('zlib').constants.Z_SYNC_FLUSH,
+          level: 9,
         },
-        br: false
+        br: true
     }));
     if (config.app.env !== 'test') {
         app.use(logger());
@@ -54,7 +66,6 @@ module.exports = function (app) {
     });
       
     app.use(jwt({secret: config.app.secret}));
-      
     fs.readdirSync('./server/controllers').forEach(function (file) {
         require('../controllers/' + file).init(app);
     });

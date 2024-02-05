@@ -17,7 +17,6 @@ exports.init = function (app) {
 
 async function createUser(ctx) {
     var user = ctx.request.body;
-  
     if (user.username == undefined || user.email == undefined || user.password == undefined) {
       ctx.status = 500;
       ctx.body = "Missing required field. [Required: 'username', 'email', and 'password']"
@@ -25,16 +24,14 @@ async function createUser(ctx) {
     }
   
     var unameCheck = await mongo.users.findOne({username: user.username});
-  
-    if (unameCheck != undefined) {
+    if (unameCheck && unameCheck != undefined) {
       ctx.status = 500;
       ctx.body = "Username taken!"
       return;
     }
   
     var emailCheck = await mongo.users.findOne({email: user.email});
-  
-    if (emailCheck != undefined) {
+    if (emailCheck && emailCheck != undefined) {
       ctx.status = 500;
       ctx.body = "Email already being used!"
       return;
