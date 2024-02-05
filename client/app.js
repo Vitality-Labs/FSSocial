@@ -61,14 +61,7 @@ angular
           }
         },
         getProfilePicture: function(userId) {
-          // var path = "/uploads/users/" + userId + ".jpg";
           var output = "../../images/default.png";
-          // common.checkIfImageExists(path, function(exists) {
-          //   if (exists) {
-          //     output = "../.." + path;
-          //     return output;
-          //   }
-          // });
           return output;
         },
         clickPost: function(postId, returnUrl = null) {
